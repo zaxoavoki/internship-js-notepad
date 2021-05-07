@@ -1,0 +1,164 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #252525;
+  color: #fff;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#filename {
+  display: inline;
+  vertical-align: middle;
+  margin: 0 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+#notification {
+  position: absolute;
+  display: none;
+  bottom: 2rem;
+  right: 2rem;
+  background: #6b6b6b;
+  border-radius: 0.3rem;
+  padding: 1rem 1.4rem;
+}
+
+#editorBlock {
+  margin-top: 2.9rem;
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+}
+
+.b {
+  font-weight: bold !important;
+}
+
+.i {
+  font-style: italic !important;
+}
+
+.n {
+  font-weight: normal !important;
+  font-style: normal !important;
+}
+
+#editor {
+  font-family: monospace;
+  font-size: 1rem;
+  padding: 0.3rem 0 0 0.8rem;
+  outline: none;
+  flex-grow: 1;
+  height: 100%;
+}
+
+#editor ul {
+  margin-left: 2rem;
+}
+
+#lines {
+  padding: 0.3rem 0 0.8rem 1rem;
+  background: #303030;
+  text-align: right;
+  color: #6b6b6b;
+  font-size: 1rem;
+  padding-right: 1rem;
+}
+
+#help pre {
+  display: inline;
+}
+
+#help, #local-files {
+  background: #ddd;
+  padding: 2rem;
+  border-radius: 0.2rem;
+  color: #000;
+  width: 20rem;
+  height: 23.5rem;
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  display: none;
+}
+
+#local-files {
+  overflow-y: scroll;
+}
+
+#local-files li {
+  cursor: pointer;
+  padding: 0.3rem 1rem 0.3rem 0;
+}
+
+#local-files ul {
+  list-style: none;
+}
+
+#local-files li:hover {
+  text-decoration: underline;
+}
+
+#topnav {
+  position: fixed;
+  background: rgb(59, 59, 59);
+  width: 100%;
+  z-index: 999;
+}
+
+#topnav ul {
+  display: inline;
+}
+
+#topnav ul ul {
+  z-index: 999;
+  margin-top: 1rem;
+  left: 0;
+  width: 7rem;
+  position: absolute;
+  display: none;
+  background: rgb(59, 59, 59);
+}
+
+#topnav ul ul li {
+  display: block;
+}
+
+#topnav ul li:hover ul {
+  display: block;
+}
+
+#topnav ul li {
+  position: relative;
+  cursor: pointer;
+  padding: 1rem 0.8rem;
+  display: inline-block;
+  font-size: 0.8rem;
+}
+
+#topnav ul li:hover {
+  background: #252525;
+}

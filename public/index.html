@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./index.css" />
+    <title>Internship Notepad</title>
+  </head>
+  <body>
+    <div id="root">
+      <input type="file" style="display: none" id="fileread-input"/>
+      <div id="notification"></div>
+      <div id="local-files">
+        <ul id="local-files-list"></ul>
+      </div>
+      <div id="help">
+        To change the note name double click on file name in the corner. <br><br>
+        To scale the editor use options <code>Zoom in</code> and <pre>Zoom out</pre><br><br>
+        There are two options to save your file. <pre>Save locally</pre> and <pre>Save on cloud.</pre><br><br>
+        To make selection bolder, firstly select the next with your mouse and then press <pre>Edit -> Bold</pre> and the same for Cursive. <br><br>
+        To close this window click on <pre>Help</pre> button in the navbar.
+      </div>
+      <div id="topnav">
+        <p id="filename"></p>
+        <ul>
+          <li>
+            File
+            <ul>
+              <li id="file-new">New file</li>
+              <li id="file-open-loc">Open local file</li>
+              <li id="file-open-ser">Open cloud file</li>
+              <li id="file-save-loc">Save locally</li>
+              <li id="file-save-ser">Save on cloud</li>
+            </ul>
+          </li>
+          <li>
+            Edit
+            <ul>
+              <li id="text-normal">Normal</li>
+              <li id="text-bold">Bold</li>
+              <li id="text-cursive">Cursive</li>
+              <li id="text-list">List</li>
+            </ul>
+          </li>
+          <li>
+            View
+            <ul>
+              <li id="zoom-in">Zoom in</li>
+              <li id="zoom-out">Zoom out</li>
+              <li id="zoom-reset">Reset zoom</li>
+            </ul>
+          </li>
+          <li id="help-btn">Help</li>
+        </ul>
+      </div>
+      <div id="editorBlock">
+        <div id="lines"></div>
+        <div id="editor" contenteditable="true" spellcheck="false"></div>
+      </div>
+    </div>
+    <script src="./js/index.js" defer></script>
+    <script src="./js/helpers.js" defer></script>
+    <script src="./js/menu/file.js" defer></script>
+    <script src="./js/menu/edit.js" defer></script>
+    <script src="./js/menu/view.js" defer></script>
+  </body>
+</html>
