@@ -1,24 +1,26 @@
-// Inserts bold tag between selection
-normalElement.addEventListener("click", (e) => {
+import { normalElem, boldElem, cursiveElem, listElem } from "../dom.js";
+import { setFontFormat, updateLineNumbers } from "../helpers.js";
+import { state } from "../config.js";
+
+normalElem.addEventListener("click", () => {
   setFontFormat("n");
 });
 
-boldElement.addEventListener("click", (e) => {
+boldElem.addEventListener("click", () => {
   setFontFormat("b");
 });
 
-// Inserts cursive tag between selection
-cursiveElement.addEventListener("click", (e) => {
+cursiveElem.addEventListener("click", () => {
   setFontFormat("i");
 });
 
 // Inserts list
-listElement.addEventListener("click", (e) => {
-  if (mouseSelection) {
+listElem.addEventListener("click", () => {
+  if (state.selection) {
     const ul = document.createElement("ul");
     const li = document.createElement("li");
     ul.appendChild(li);
-    mouseSelection.range.insertNode(ul);
-    countLinesNumber();
+    state.selection.range.insertNode(ul);
+    updateLineNumbers();
   }
 });

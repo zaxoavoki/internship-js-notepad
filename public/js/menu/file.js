@@ -1,17 +1,37 @@
+import {
+  filereadInput,
+  filenameElem,
+  editorElem,
+  fileOpenLocalElem,
+  fileOpenServerElem,
+  fileListElem,
+  fileCreateElem,
+  fileSaveLocallyElem,
+  fileSaveServerElem,
+} from "../dom.js";
+import { state, defaultFilename } from "../config.js";
+import {
+  isEmpty,
+  updateLineNumbers,
+  getCookies,
+  showNotification,
+} from "../helpers.js";
+import { downloadFile, uploadFile } from "../api.js";
+
 // When choosing local file event
 filereadInput.addEventListener("change", (e) => {
   const fileReader = new FileReader();
   fileReader.onload = (_) => {
-    filename = e.target.files[0].name.split(".").slice(0, -1);
-    filenameBlock.innerHTML = filename;
-    editorBlock.innerHTML = fileReader.result;
+    state.filename = e.target.files[0].name.split(".").slice(0, -1);
+    filenameElem.innerHTML = state.filename;
+    editorElem.innerHTML = fileReader.result;
   };
   fileReader.readAsText(e.target.files[0]);
 });
 
 // On open local file
-fileOpenLocalElement.addEventListener("click", (e) => {
-  if (validateFile()) {
+fileOpenLocalElem.addEventListener("click", () => {
+  if (!isEmpty()) {
     const ans = confirm("Do you want to discard changes?");
     if (!ans) {
       showNotification("Save your file first!");
@@ -24,9 +44,9 @@ fileOpenLocalElement.addEventListener("click", (e) => {
 });
 
 // On open file from the server
-fileOpenServerElement.addEventListener("click", (e) => {
+fileOpenServerElem.addEventListener("click", () => {
   const cookies = getCookies();
-  fileList.innerHTML = "";
+  fileListElem.innerHTML = "";
   const ul = document.createElement("ul");
   for (const [_, value] of Object.entries(cookies)) {
     if (!value) {
@@ -41,98 +61,75 @@ fileOpenServerElement.addEventListener("click", (e) => {
     li.setAttribute("data-id", value);
     ul.appendChild(li);
   }
-
-  fileList.append(ul);
-  fileList.style.display = "block";
+  fileListElem.append(ul);
+  fileListElem.style.display = "block";
 });
 
 // On saved files list
-fileList.addEventListener("click", (e) => {
+fileListElem.addEventListener("click", (e) => {
   if (e.target.tagName !== "LI") {
     e.target.style = "none";
     return;
   }
-  const key = e.target.getAttribute("data-id");
-  fetch(serverURI + "/download/" + key)
-    .then((res) => res.json())
-    .then((res) => {
-      filename = res.filename;
-      filenameBlock.innerHTML = filename;
-      editorBlock.innerHTML = res.text;
-    })
-    .catch((e) => {
-      showNotification("Can't open the note");
-    });
+  downloadFile(e.target.getAttribute("data-id"));
 });
 
 // On New file options click
-fileCreateElement.addEventListener("click", (e) => {
-  if (editorBlock.innerHTML.trim() !== "") {
+fileCreateElem.addEventListener("click", () => {
+  if (editorElem.innerHTML.trim() !== "") {
     const ans = confirm("Are you sure you want to discard all changes?");
     if (ans) {
-      filename = defaultFilename;
-      filenameBlock.innerHTML = filename;
-      editorBlock.innerHTML = "";
-      countLinesNumber();
+      state.filename = defaultFilename;
+      filenameElem.innerHTML = state.filename;
+      editorElem.innerHTML = "";
+      updateLineNumbers();
     }
   }
 });
 
 // Save file (download) to the local computer
-fileSaveLocallyElement.addEventListener("click", (e) => {
-  if (validateFile()) {
+fileSaveLocallyElem.addEventListener("click", () => {
+  if (!isEmpty()) {
     // Creates temporary link to be able to download text file
     const tmpLink = document.createElement("a");
     tmpLink.setAttribute(
       "href",
       "data:text/plain;charset=utf-8," +
-        encodeURIComponent(editorBlock.innerHTML)
+        encodeURIComponent(editorElem.innerHTML)
     );
-    tmpLink.setAttribute("download", filename);
+    tmpLink.setAttribute("download", state.filename);
     tmpLink.style.display = "none";
     document.body.appendChild(tmpLink);
     tmpLink.click();
     document.body.removeChild(tmpLink);
+  } else {
+    showNotification("File is empty");
   }
 });
 
 // On file saving to the server
 // send text to the server and get token as response
-fileSaveServerElement.addEventListener("click", (e) => {
+fileSaveServerElem.addEventListener("click", (e) => {
   e.preventDefault();
-  if (validateFile()) {
-    fetch(serverURI + "/upload", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        filename,
-        text: editorBlock.innerHTML,
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        // store token in cookies
-        setCookie(res.token + "." + filename, res.token + "." + filename, 365);
-        showNotification("File was saved");
-      })
-      .catch((err) => {
-        showNotification("File was not saved");
-      });
+  if (!isEmpty()) {
+    uploadFile();
+  } else {
+    showNotification("File is empty");
   }
 });
 
 // On double click make file name block editable
-filenameBlock.addEventListener("dblclick", (e) => {
+filenameElem.addEventListener("dblclick", (e) => {
   e.target.setAttribute("contenteditable", "true");
 });
 
 // When file name block lost focus set filename
-filenameBlock.addEventListener("blur", (e) => {
+filenameElem.addEventListener("blur", (e) => {
   if (e.target.textContent.trim() === "") {
-    e.target.innerHTML = filename;
+    e.target.innerHTML = state.filename;
   } else {
     e.target.innerHTML = e.target.textContent;
-    filename = e.target.innerHTML;
+    state.filename = e.target.innerHTML;
   }
   e.target.setAttribute("contenteditable", "false");
 });

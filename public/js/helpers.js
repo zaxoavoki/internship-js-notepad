@@ -1,13 +1,15 @@
+import { notificationElem, linesElem, editorElem } from "./dom.js";
+import { state } from "./config.js";
+
 // Set cookies with expiration date in days
-function setCookie(name, value, days) {
-  const date = new Date();
-  date.setTime(date.getTime() + days * 24 * 3600 * 1000);
+export function setCookie(name, value, days) {
+  const date = new Date(Date.now() + days * 24 * 3600 * 1000);
   const expires = "expires=" + date.toUTCString();
   document.cookie = `${name}=${value};${expires};path=/`;
 }
 
 // Get all cookies in key-value representation
-function getCookies() {
+export function getCookies() {
   return document.cookie.split(";").reduce((cookies, cookie) => {
     const [name, value] = cookie.split("=").map((c) => c.trim());
     cookies[name.split(".")[0]] = value;
@@ -16,50 +18,44 @@ function getCookies() {
 }
 
 // Checks if current editor text is empty or not
-function validateFile() {
-  const content = editorBlock.innerHTML;
-  if (content.trim() === "") {
-    showNotification("File is empty");
-    return false;
-  }
-  return true;
+export function isEmpty() {
+  return editorElem.innerHTML.trim() === "";
 }
 
 // Show notification dialog message
-function showNotification(text) {
-  notificationBlock.innerHTML = text;
-  notificationBlock.style.display = "block";
+export function showNotification(text, delay = 2000) {
+  notificationElem.innerHTML = text;
+  notificationElem.style.display = "block";
   setTimeout(() => {
-    notificationBlock.innerHTML = "";
-    notificationBlock.style.display = "none";
-  }, 2000);
+    notificationElem.innerHTML = "";
+    notificationElem.style.display = "none";
+  }, delay);
 }
 
 // For previously set mouse selection change font style
-function setFontFormat(element) {
-  if (mouseSelection) {
-    const selection = mouseSelection.range;
+export function setFontFormat(elem) {
+  if (state.selection.range) {
+    const selection = state.selection.range;
     const selectedText = selection.extractContents();
     const el = document.createElement("span");
-    el.classList.add(element);
+    el.classList.add(elem);
     el.appendChild(selectedText);
     selection.insertNode(el);
   }
 }
 
 // Updates line numbering
-function countLinesNumber() {
-  // Use setTimeout without second argument as macroTask which will be executed after microTasks and synchonous code
-  setTimeout(() => {
-    linesBlock.innerHTML = editorBlock.childNodes.length < 2 ? "1" : "";
-    for (
-      let i = 0;
-      i <
-      editorBlock.childNodes.length -
-        (editorBlock.childNodes.length < 2 ? 1 : 0);
-      i++
-    ) {
-      linesBlock.innerHTML += i + 1 + "<br>";
-    }
-  });
+export function updateLineNumbers() {
+  // Use setTimeout without second argument as macroTask
+  // which will be executed after queue of microTasks and synchonous code
+  const cond = editorElem.childNodes.length < 2 ? "1" : "";
+  linesElem.innerHTML = cond;
+  const lists = Array.from(editorElem.childNodes).reduce(
+    (a, c) =>
+      a + Array.from(c.childNodes).filter((e) => e.tagName === "LI").length,
+    0
+  );
+  for (let i = 0; i < editorElem.childNodes.length - cond + lists; i++) {
+    linesElem.innerHTML += i + 1 + "<br>";
+  }
 }

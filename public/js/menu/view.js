@@ -1,13 +1,26 @@
-// Zooming actions
+import {
+  zoomInElem,
+  zoomOutElem,
+  zoomResetElem,
+  helpBtnElem,
+  helpElem,
+  rootElem,
+} from "../dom.js";
+import { defaultFontSize } from "../config.js";
 
-zoomInElement.onclick = () => {
-  rootElement.style.fontSize = parseInt(rootElement.style.fontSize) + 1 + "px";
+zoomInElem.onclick = () => {
+  rootElem.style.fontSize = parseInt(rootElem.style.fontSize) + 1 + "px";
 };
 
-zoomOutElement.onclick = () => {
-  rootElement.style.fontSize = parseInt(rootElement.style.fontSize) - 1 + "px";
+zoomOutElem.onclick = () => {
+  rootElem.style.fontSize = parseInt(rootElem.style.fontSize) - 1 + "px";
 };
 
-zoomResetElement.onclick = () => {
-  rootElement.style.fontSize = defaultFontSize + "px";
+zoomResetElem.onclick = () => {
+  rootElem.style.fontSize = defaultFontSize + "px";
 };
+
+helpBtnElem.addEventListener("click", () => {
+  helpElem.style.display = helpElem.show ? "none" : "block";
+  helpElem.show = !helpElem.show;
+});
