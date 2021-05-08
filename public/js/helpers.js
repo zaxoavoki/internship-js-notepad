@@ -50,12 +50,14 @@ export function updateLineNumbers() {
   // which will be executed after queue of microTasks and synchonous code
   const cond = editorElem.childNodes.length < 2 ? "1" : "";
   linesElem.innerHTML = cond;
-  const lists = Array.from(editorElem.childNodes).reduce(
-    (a, c) =>
-      a + Array.from(c.childNodes).filter((e) => e.tagName === "LI").length,
-    0
-  );
-  for (let i = 0; i < editorElem.childNodes.length - cond + lists; i++) {
+  for (
+    let i = 0;
+    i <
+    editorElem.childNodes.length -
+      cond +
+      (editorElem.innerHTML.match(/<li>/g) || []).length;
+    i++
+  ) {
     linesElem.innerHTML += i + 1 + "<br>";
   }
 }

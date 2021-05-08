@@ -20,7 +20,7 @@ editorElem.addEventListener("mouseup", () => {
 });
 
 // On any key press event
-editorElem.addEventListener("keydown", () => {
+editorElem.addEventListener("keydown", (e) => {
   setTimeout(() => {
     updateLineNumbers();
   });

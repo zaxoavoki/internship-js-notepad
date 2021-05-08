@@ -66,12 +66,19 @@ fileOpenServerElem.addEventListener("click", () => {
 });
 
 // On saved files list
-fileListElem.addEventListener("click", (e) => {
+fileListElem.addEventListener("click", async (e) => {
   if (e.target.tagName !== "LI") {
     e.target.style = "none";
     return;
   }
-  downloadFile(e.target.getAttribute("data-id"));
+  try {
+    const file = await downloadFile(e.target.getAttribute("data-id"));
+    state.filename = file.filename;
+    filenameElem.innerHTML = state.filename;
+    editorElem.innerHTML = file.text;
+  } catch (e) {
+    showNotification("Can't open the note");
+  }
 });
 
 // On New file options click
@@ -109,10 +116,20 @@ fileSaveLocallyElem.addEventListener("click", () => {
 
 // On file saving to the server
 // send text to the server and get token as response
-fileSaveServerElem.addEventListener("click", (e) => {
+fileSaveServerElem.addEventListener("click", async (e) => {
   e.preventDefault();
   if (!isEmpty()) {
-    uploadFile();
+    try {
+      const { token } = await uploadFile();
+      setCookie(
+        token + "." + state.filename,
+        token + "." + state.filename,
+        365
+      );
+      showNotification("File was saved");
+    } catch (e) {
+      showNotification("File was not saved");
+    }
   } else {
     showNotification("File is empty");
   }
