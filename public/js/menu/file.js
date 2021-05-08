@@ -14,6 +14,7 @@ import {
   isEmpty,
   updateLineNumbers,
   getCookies,
+  setCookie,
   showNotification,
 } from "../helpers.js";
 import { downloadFile, uploadFile } from "../api.js";
@@ -128,6 +129,7 @@ fileSaveServerElem.addEventListener("click", async (e) => {
       );
       showNotification("File was saved");
     } catch (e) {
+      console.log(e);
       showNotification("File was not saved");
     }
   } else {
