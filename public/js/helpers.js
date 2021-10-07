@@ -34,9 +34,9 @@ export function showNotification(text, delay = 2000) {
 
 // For previously set mouse selection change font style
 export function setFontFormat(elem) {
-  console.log(elem);
+
   if (state.selection.range) {
-    console.log(state.selection.range);
+ 
     const selection = state.selection.range;
     const selectedText = selection.extractContents();
     const el = document.createElement("span");
