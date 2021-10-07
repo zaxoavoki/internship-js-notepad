@@ -34,12 +34,22 @@ export function showNotification(text, delay = 2000) {
 
 // For previously set mouse selection change font style
 export function setFontFormat(elem) {
+
   if (state.selection.range) {
+ 
     const selection = state.selection.range;
     const selectedText = selection.extractContents();
     const el = document.createElement("span");
     el.classList.add(elem);
     el.appendChild(selectedText);
+  const arr=el.querySelectorAll("span");
+  for(let i=0;i<arr.length;i++)
+  {
+    arr[i].classList.remove('n');
+    arr[i].classList.remove('b');
+    arr[i].classList.remove('i');
+    arr[i].classList.add(elem);
+  }
     selection.insertNode(el);
   }
 }
